@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
@@ -77,17 +77,25 @@ public class CC1 : MonoBehaviour {
 		// in this the size is 2
 		Vector3 nextPosition = BS [whatTrack].Evaluate (u);
 		float searchX;
-		float searchY;
+		float searchZ;
+		int lowestIndex;
 		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMax) {
 			whatTrack += 1;
 			searchX = transform.position.x / 2f;
-			searchY = transform.position.y / 2f;
-			for (int i = 0; i < ArrayList[whatTrack].Length; i++){
-				Debug.Log ("bob");
+			searchZ = transform.position.z / 2f;
+			for (int i = 0; i < array[whatTrack].Length; i++){ 
+				//Debug.Log ("bob");
+				if (array[whatTrack][i].position.x == searchX){
+				}
 			}
 		} 
 		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMin) {
 			whatTrack -=1;
+			searchX = transform.position.x / 2f;
+			searchZ = transform.position.z /2f;
+			for (int i = 0; i < array[whatTrack].Length; i++){
+				Debug.Log ("AntiBob");
+			}
 		}
 		return nextPosition;
 	}
