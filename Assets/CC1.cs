@@ -76,23 +76,25 @@ public class CC1 : MonoBehaviour {
 	Vector3 changeLanes() {
 		// in this the size is 2
 		Vector3 nextPosition = BS [whatTrack].Evaluate (u);
-		float searchX;
-		float searchZ;
-		int lowestIndex;
+		//float searchX;
+		//float searchZ;
+		//int lowestIndex = 0;
 		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMax) {
 			whatTrack += 1;
-			searchX = transform.position.x / 2f;
-			searchZ = transform.position.z / 2f;
+			//searchX = transform.position.x / 2f;
+			//searchZ = transform.position.z / 2f;
 			for (int i = 0; i < array[whatTrack].Length; i++){ 
 				//Debug.Log ("bob");
-				if (array[whatTrack][i].position.x == searchX){
+				if ((Mathf.Abs(array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs (array[whatTrack][i].position.x - nextPosition.x))){
+					return array[whatTrack][i];
 				}
+
 			}
 		} 
 		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMin) {
 			whatTrack -=1;
-			searchX = transform.position.x / 2f;
-			searchZ = transform.position.z /2f;
+			//searchX = transform.position.x / 2f;
+			//searchZ = transform.position.z /2f;
 			for (int i = 0; i < array[whatTrack].Length; i++){
 				Debug.Log ("AntiBob");
 			}
