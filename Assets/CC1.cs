@@ -85,8 +85,8 @@ public class CC1 : MonoBehaviour {
 			//searchZ = transform.position.z / 2f;
 			for (int i = 0; i < array[whatTrack].Length; i++){ 
 				//Debug.Log ("bob");
-				if ((Mathf.Abs(array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs (array[whatTrack][i].position.x - nextPosition.x))){
-					return array[whatTrack][i];
+				if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
+					 nextPosition = array[whatTrack][i].position;
 				}
 
 			}
@@ -96,7 +96,10 @@ public class CC1 : MonoBehaviour {
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z /2f;
 			for (int i = 0; i < array[whatTrack].Length; i++){
-				Debug.Log ("AntiBob");
+				//Debug.Log ("AntiBob");
+				if ((Mathf.Abs (array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (ArrayList[whatTrack][i].position - nextPosition)){
+					nextPosition = array[whatTrack][i].position;
+				}
 			}
 		}
 		return nextPosition;
