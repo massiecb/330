@@ -107,7 +107,8 @@ public class CC1 : MonoBehaviour {
 		//int lowestIndex = 0;
 
 		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMin) {
-			Debug.Log("one");
+			Debug.Log("one"); // save original position
+			Transform original = transform.position;
 			whatTrack -= 1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z / 2f;
@@ -115,7 +116,7 @@ public class CC1 : MonoBehaviour {
 				//Debug.Log ("bob");
 				Debug.Log (array[whatTrack][i+1].position.x);
 				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
-				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){
+				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){ // may be wrong, should be < or equal to
 					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
 						Debug.Log ("in loop" + array[whatTrack][i].position);
 					 	nextPosition = array[whatTrack][i].position;
