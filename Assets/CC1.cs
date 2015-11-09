@@ -58,9 +58,13 @@ public class CC1 : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		//Debug.Log ("FU(0): " + u + " V= " + velocity);
 		//changeLanes(); // after net_pos
-		deltaVelocity();
-		u += Time.deltaTime * velocity / 5;
+		//deltaVelocity();
+		velocity = 1;
+		//Debug.Log ("FU(1): " + u + " V= " + velocity);
+		u += Time.fixedDeltaTime * velocity / 5;
+
 		if (u >= BS[whatTrack].Length)
 			u -= BS[whatTrack].Length;
 //		Vector3 next_pos = BS[whatTrack].Evaluate(u);
@@ -72,6 +76,7 @@ public class CC1 : MonoBehaviour {
 	}
 	
 	void deltaVelocity() {
+		//Debug.Log ("DV: " + drag + " " + first_gear + " " + second_gear + " " + third_gear + " " + fourth_gear + " " + top_speed);
 		if (CrossPlatformInputManager.GetAxis("Vertical") == 0 && velocity > 0)
 			velocity -= drag;
 		else if (velocity <= 10)
@@ -89,34 +94,42 @@ public class CC1 : MonoBehaviour {
 	}
 	
 	Vector3 changeLanes() {
+		//Debug.Log (CrossPlatformInputManager.GetAxis ("Horizontal"));
 		// in this the size is 2
 		Vector3 nextPosition = BS [whatTrack].Evaluate (u);
 		//foreach (Transform t in array[whatTrack])
 		//	Debug.Log (t.position);
-		for (int i = 0; i < BS[whatTrack].ctlPoint.Length; i++)
-			Debug.Log (BS [whatTrack].ctlPoint [i].position);
+		//for (int i = 0; i < BS[whatTrack].ctlPoint.Length; i++)
+	//		Debug.Log (BS [whatTrack].ctlPoint [i].position);
 		//Debug.Log (nextPosition);
 		//float searchX;
 		//float searchZ;
 		//int lowestIndex = 0;
-		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMax) {
+
+		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMin) {
 			Debug.Log("one");
-			whatTrack += 1;
+			whatTrack -= 1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z / 2f;
-			for (int i = 0; i < array[whatTrack].Length; i++){ 
+			for (int i = 0; i < array[whatTrack].Length - 1; i++){ 
 				//Debug.Log ("bob");
+				Debug.Log (array[whatTrack][i+1].position.x);
 				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
-				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-					if ((Mathf.Abs(array[whatTrack][i+1].position.y - nextPosition.y)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){
+					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+						Debug.Log ("in loop" + array[whatTrack][i].position);
 					 	nextPosition = array[whatTrack][i].position;
 					}
 				}
+				else if (i == array[whatTrack].Length -1){
+					nextPosition = array[whatTrack][0].position;
+					Debug.Log ("overflow: " + nextPosition);
+				}
 			}
 		} 
-		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMin) {
+		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMax) {
 			Debug.Log ("two");
-			whatTrack -=1;
+			whatTrack +=1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z /2f;
 			for (int i = 0; i < array[whatTrack].Length; i++){
@@ -125,13 +138,19 @@ public class CC1 : MonoBehaviour {
 				//	nextPosition = array[whatTrack][i].position;
 				//}
 				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-					if ((Mathf.Abs(array[whatTrack][i+1].position.y - nextPosition.y)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+						Debug.Log (array[whatTrack][i].position);
 						nextPosition = array[whatTrack][i].position;
 					}
 				}
 			}
 		}
-		Debug.Log (nextPosition);
+		//if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0)
+		//	Debug.Log ("greater than");
+		//else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMax)
+		//	Debug.Log ("less than");
+
+		//Debug.Log (nextPosition);
 		return nextPosition;
 	}
 }

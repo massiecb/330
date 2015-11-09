@@ -260,15 +260,15 @@ MonoBehaviour:
   lane: {x: 0, y: 0, z: 0}
   u: 0
   velocity: 0
-  first_gear: 0
-  second_gear: 0
-  third_gear: 0
-  fourth_gear: 0
-  top_speed: 0
-  drag: 0
-  weight: 0
-  angle: 0
-  road_smooth: 0
+  first_gear: 1
+  second_gear: 1
+  third_gear: 1
+  fourth_gear: 1
+  top_speed: 1
+  drag: 1
+  weight: 1
+  angle: 1
+  road_smooth: 1
   ctrlA:
   - {fileID: 1247473247}
   - {fileID: 247934114}
