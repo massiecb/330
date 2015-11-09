@@ -11,27 +11,41 @@ public class CC1 : MonoBehaviour {
 	public Transform[] ctrlB;
 	public BSpline[] BS;
 	public Transform[][] array; 
-	//private BSpline b;
-	//private BSpline b2;
+	private BSpline b;
+	private BSpline b2;
 	private int whatTrack;
 	private int trackMin = 0;
 	private int trackMax = 1;
 	// Use this for initialization
 	void Start () {
-		//b = new BSpline(ctrlA);
-		//b2 = new BSpline (ctrlB);
+//		Debug.Log (b);
+		b = new BSpline(ctrlA);
+		b2 = new BSpline (ctrlB);
+		//for (int i = 0; i < b.ctlPoint.Length; i++)
+		//	Debug.Log (b.ctlPoint [i].position);
 		BS = new BSpline[] {
-			new BSpline(ctrlA) , 
-			new BSpline(ctrlB)};
+		//new BSpline(ctrlA) , 
+			b,
+			b2};
+		//new BSpline(ctrlA)};
+		//Debug.Log (BS [2]);
+//		for (int i = 0; i < BS.Length; i++)
+//			Debug.Log (BS[i]);
+			//new BSpline(ctrlB)};
 		array = new Transform[][] {
 			 new Transform[ctrlA.Length],
 			new Transform[ctrlB.Length]
 		};
+//		for (int i = 0; i < ctrlA.Length; i++)
+//			Debug.Log (ctrlA[i].position);
 		//b = BS [0];
 		//b2 = BS [1];
 		array [0] = ctrlA;
 		array [1] = ctrlB;
+		//BS [0] = b;
+		//BS [1] = b2;
 		whatTrack = 0;
+//		Debug.Log (BS [whatTrack]);
 		u = 0f;
 		top_speed = 40f;
 		//        road_smooth = 0.1f;
@@ -50,6 +64,7 @@ public class CC1 : MonoBehaviour {
 		if (u >= BS[whatTrack].Length)
 			u -= BS[whatTrack].Length;
 //		Vector3 next_pos = BS[whatTrack].Evaluate(u);
+//		Vector3 next_pos = b.Evaluate (u);
 		Vector3 next_pos = changeLanes ();
 		//changeLanes (next_pos);
 		transform.LookAt(next_pos);
@@ -76,32 +91,47 @@ public class CC1 : MonoBehaviour {
 	Vector3 changeLanes() {
 		// in this the size is 2
 		Vector3 nextPosition = BS [whatTrack].Evaluate (u);
+		//foreach (Transform t in array[whatTrack])
+		//	Debug.Log (t.position);
+		for (int i = 0; i < BS[whatTrack].ctlPoint.Length; i++)
+			Debug.Log (BS [whatTrack].ctlPoint [i].position);
+		//Debug.Log (nextPosition);
 		//float searchX;
 		//float searchZ;
 		//int lowestIndex = 0;
 		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMax) {
+			Debug.Log("one");
 			whatTrack += 1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z / 2f;
 			for (int i = 0; i < array[whatTrack].Length; i++){ 
 				//Debug.Log ("bob");
-				if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
-					 nextPosition = array[whatTrack][i].position;
+				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
+				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+					if ((Mathf.Abs(array[whatTrack][i+1].position.y - nextPosition.y)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+					 	nextPosition = array[whatTrack][i].position;
+					}
 				}
-
 			}
 		} 
 		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMin) {
+			Debug.Log ("two");
 			whatTrack -=1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z /2f;
 			for (int i = 0; i < array[whatTrack].Length; i++){
 				//Debug.Log ("AntiBob");
-				if ((Mathf.Abs (array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (ArrayList[whatTrack][i].position - nextPosition)){
-					nextPosition = array[whatTrack][i].position;
+				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
+				//	nextPosition = array[whatTrack][i].position;
+				//}
+				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+					if ((Mathf.Abs(array[whatTrack][i+1].position.y - nextPosition.y)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+						nextPosition = array[whatTrack][i].position;
+					}
 				}
 			}
 		}
+		Debug.Log (nextPosition);
 		return nextPosition;
 	}
 }
