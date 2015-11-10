@@ -69,10 +69,12 @@ public class CC1 : MonoBehaviour {
 			u -= BS[whatTrack].Length;
 //		Vector3 next_pos = BS[whatTrack].Evaluate(u);
 //		Vector3 next_pos = b.Evaluate (u);
+		original = transform.position;
 		Vector3 next_pos = changeLanes ();
 		//changeLanes (next_pos);
 		transform.LookAt(next_pos);
-		transform.position = next_pos + lane;        
+		transform.position = next_pos + lane;
+		//transform.position = Vector3.Slerp (original, next_pos, 1f);
 	}
 	
 	void deltaVelocity() {
@@ -112,9 +114,9 @@ public class CC1 : MonoBehaviour {
 			whatTrack -= 1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z / 2f;
-			for (int i = 0; i < array[whatTrack].Length -1; i++){ 
+			for (int i = 0; i < array[whatTrack].Length - 1; i++){ 
 				//Debug.Log ("bob");
-				original = transform.position;
+				//original = transform.position;
 				//Debug.Log ("Evaluating at: " + array[whatTrack][i].position + " Next Item" + array[whatTrack][i+1].position + "current" + original);
 				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
 //				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){ // may be wrong, should be < or equal to
@@ -138,7 +140,7 @@ public class CC1 : MonoBehaviour {
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z /2f;
 			for (int i = 0; i < array[whatTrack].Length - 1; i++){
-				original = transform.position;
+				//original = transform.position;
 				//Debug.Log ("AntiBob");
 				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
 				//	nextPosition = array[whatTrack][i].position;
