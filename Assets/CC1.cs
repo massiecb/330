@@ -16,6 +16,7 @@ public class CC1 : MonoBehaviour {
 	private int whatTrack;
 	private int trackMin = 0;
 	private int trackMax = 1;
+	private Vector3 original;
 	// Use this for initialization
 	void Start () {
 //		Debug.Log (b);
@@ -64,7 +65,6 @@ public class CC1 : MonoBehaviour {
 		velocity = 1;
 		//Debug.Log ("FU(1): " + u + " V= " + velocity);
 		u += Time.fixedDeltaTime * velocity / 5;
-
 		if (u >= BS[whatTrack].Length)
 			u -= BS[whatTrack].Length;
 //		Vector3 next_pos = BS[whatTrack].Evaluate(u);
@@ -107,42 +107,52 @@ public class CC1 : MonoBehaviour {
 		//int lowestIndex = 0;
 
 		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMin) {
-			Debug.Log("one"); // save original position
-			Transform original = transform.position;
+			//Debug.Log("one"); // save original position
+			//Vector3 original = transform.position;
 			whatTrack -= 1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z / 2f;
-			for (int i = 0; i < array[whatTrack].Length - 1; i++){ 
+			for (int i = 0; i < array[whatTrack].Length -1; i++){ 
 				//Debug.Log ("bob");
-				Debug.Log (array[whatTrack][i+1].position.x);
+				original = transform.position;
+				//Debug.Log ("Evaluating at: " + array[whatTrack][i].position + " Next Item" + array[whatTrack][i+1].position + "current" + original);
 				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
-				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){ // may be wrong, should be < or equal to
-					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-						Debug.Log ("in loop" + array[whatTrack][i].position);
-					 	nextPosition = array[whatTrack][i].position;
+//				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){ // may be wrong, should be < or equal to
+//					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) <= Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
+					//Debug.Log ("1st if: Evaluating at: " + array[whatTrack][i].position + " Next Item" + array[whatTrack][i+1].position + "current" + original);
+					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) <= Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
+						//Debug.Log ("in loop" + array[whatTrack][i].position + "next point" + array[whatTrack][i+1].position);
+					 	nextPosition = array[whatTrack][i+1].position;
 					}
 				}
-				else if (i == array[whatTrack].Length -1){
+				else if (i == array[whatTrack].Length - 1){
 					nextPosition = array[whatTrack][0].position;
-					Debug.Log ("overflow: " + nextPosition);
+					//Debug.Log ("overflow: " + nextPosition);
 				}
 			}
 		} 
 		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMax) {
-			Debug.Log ("two");
+			//Debug.Log ("two");
 			whatTrack +=1;
 			//searchX = transform.position.x / 2f;
 			//searchZ = transform.position.z /2f;
-			for (int i = 0; i < array[whatTrack].Length; i++){
+			for (int i = 0; i < array[whatTrack].Length - 1; i++){
+				original = transform.position;
 				//Debug.Log ("AntiBob");
 				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
 				//	nextPosition = array[whatTrack][i].position;
 				//}
-				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-						Debug.Log (array[whatTrack][i].position);
+				//if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+				//	if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
+				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) <= Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
+					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) <= Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
+						//Debug.Log (array[whatTrack][i].position);
 						nextPosition = array[whatTrack][i].position;
 					}
+				}
+				else if (i == array[whatTrack].Length - 1){
+					nextPosition = array[whatTrack][0].position;
 				}
 			}
 		}
