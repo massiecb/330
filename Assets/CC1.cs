@@ -73,7 +73,12 @@ public class CC1 : MonoBehaviour {
 		Vector3 next_pos = changeLanes ();
 		//changeLanes (next_pos);
 		transform.LookAt(next_pos);
-		transform.position = next_pos + lane;
+		//Transform [] tempT = new Transform[] = {
+		//	original,
+		//	next_pos
+		//}
+		//BSpline temp = new BSpline (tempT);
+		//transform.position = next_pos + lane;
 		//transform.position = Vector3.Slerp (original, next_pos, 1f);
 	}
 	
@@ -121,17 +126,36 @@ public class CC1 : MonoBehaviour {
 				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
 //				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){ // may be wrong, should be < or equal to
 //					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) <= Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
+				//int n = array[whatTrack].Length - 1;
+				//Debug.Log (i + " : " + n);
+				//if (i == array[whatTrack].Length - 1){
+				//	Debug.Log ("True");
+				//	nextPosition = array[whatTrack][0].position;
+				//}
+				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
 					//Debug.Log ("1st if: Evaluating at: " + array[whatTrack][i].position + " Next Item" + array[whatTrack][i+1].position + "current" + original);
-					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) <= Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
+					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
 						//Debug.Log ("in loop" + array[whatTrack][i].position + "next point" + array[whatTrack][i+1].position);
-					 	nextPosition = array[whatTrack][i+1].position;
+						nextPosition = array[whatTrack][i+1].position;
+						//Transform [] tempTrack = new Transform[] {
+						//	transform,
+						//	array[whatTrack][i+1]
+						//};
+						//BSpline temp = new BSpline (tempTrack);
+						//transform.LookAt(nextPosition);
+						//u += Time.fixedDeltaTime * velocity / 5;
+						//if (u >= BS[whatTrack].Length)
+						//	u -= BS[whatTrack].Length;
+						//transform.position = temp.Evaluate(u);
+						//transform.position = Vector3.MoveTowards(original, nextPosition, 2f * Time.deltaTime);
+						//transform.position = Vector3.Slerp (original, nextPosition, 10f);
+					 	return nextPosition;
 					}
 				}
-				else if (i == array[whatTrack].Length - 1){
-					nextPosition = array[whatTrack][0].position;
+				//else if (i == array[whatTrack].Length - 1){
+				//	nextPosition = array[whatTrack][0].position;
 					//Debug.Log ("overflow: " + nextPosition);
-				}
+				//}
 			}
 		} 
 		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMax) {
@@ -147,15 +171,36 @@ public class CC1 : MonoBehaviour {
 				//}
 				//if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
 				//	if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) <= Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
-					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) <= Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
+				//int n = array[whatTrack].Length - 1;
+				//Debug.Log (i + " : " + n);
+				//if (i == array[whatTrack].Length - 1){
+			//		Debug.Log ("true2");
+			//		nextPosition = array[whatTrack][0].position;
+			//	}
+				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
+					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
 						//Debug.Log (array[whatTrack][i].position);
-						nextPosition = array[whatTrack][i].position;
+						nextPosition = array[whatTrack][i+1].position;
+						transform.LookAt(nextPosition);
+						transform.position = nextPosition + lane;
+						//Transform [] tempTrack = new Transform[] {
+						//	transform,
+						//	array[whatTrack][i+1]
+						//};
+						//BSpline temp = new BSpline (tempTrack);
+						//transform.LookAt(nextPosition);
+						//u += Time.fixedDeltaTime * velocity / 5;
+						//if (u >= BS[whatTrack].Length)
+						//	u -= BS[whatTrack].Length;
+						//transform.position = temp.Evaluate(u);
+						//transform.position = Vector3.MoveTowards(original, nextPosition, 2f * Time.deltaTime);
+						//transform.position = Vector3.Slerp (original, nextPosition, 10f);
+						return nextPosition;
 					}
 				}
-				else if (i == array[whatTrack].Length - 1){
-					nextPosition = array[whatTrack][0].position;
-				}
+				//else if (i == array[whatTrack].Length - 1){
+				//	nextPosition = array[whatTrack][0].position;
+				//}
 			}
 		}
 		//if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0)
@@ -164,6 +209,8 @@ public class CC1 : MonoBehaviour {
 		//	Debug.Log ("less than");
 
 		//Debug.Log (nextPosition);
+		transform.LookAt (nextPosition);
+		transform.position = nextPosition + lane;
 		return nextPosition;
 	}
 }
