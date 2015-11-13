@@ -27,7 +27,7 @@ using System.Collections.Generic;
 public class BSpline {
 	private const float OneSixth = 1f / 6f;
 	private const float TwoThirds = 2f / 3f;
-	private Transform[] ctlPoint;
+	public Transform[] ctlPoint;
 	
 	public int Length;
 
