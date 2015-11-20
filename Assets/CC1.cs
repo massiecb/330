@@ -1,88 +1,63 @@
 using UnityEngine;
+using System;
 using UnityEditor;
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class CC1 : MonoBehaviour {
 	//force commit
-	public Vector3 lane;
-	public float u, velocity, first_gear, second_gear, third_gear, fourth_gear, top_speed, drag, weight, angle, road_smooth;
-	public Transform[] ctrlA;
-	public Transform[] ctrlB;
+	public float u, velocity, first_gear, second_gear, third_gear, fourth_gear, top_speed, drag, weight, lane_change;
+	public Transform[] ctrlA, ctrlB;
 	public BSpline[] BS;
 	public Transform[][] array; 
-	private BSpline b;
-	private BSpline b2;
+	private BSpline b, b2;
 	private int whatTrack;
-	private int trackMin = 0;
-	private int trackMax = 1;
-	private Vector3 original;
+	private int trackMin = 0, trackMax = 1;
+	private Vector3 original, prev_track;
+
 	// Use this for initialization
 	void Start () {
 //		Debug.Log (b);
 		b = new BSpline(ctrlA);
 		b2 = new BSpline (ctrlB);
-		//for (int i = 0; i < b.ctlPoint.Length; i++)
-		//	Debug.Log (b.ctlPoint [i].position);
-		BS = new BSpline[] {
-		//new BSpline(ctrlA) , 
-			b,
-			b2};
-		//new BSpline(ctrlA)};
-		//Debug.Log (BS [2]);
-//		for (int i = 0; i < BS.Length; i++)
-//			Debug.Log (BS[i]);
-			//new BSpline(ctrlB)};
-		array = new Transform[][] {
-			 new Transform[ctrlA.Length],
-			new Transform[ctrlB.Length]
-		};
-//		for (int i = 0; i < ctrlA.Length; i++)
-//			Debug.Log (ctrlA[i].position);
-		//b = BS [0];
-		//b2 = BS [1];
+		BS = new BSpline[] {b, b2};
+		array = new Transform[][] {new Transform[ctrlA.Length], new Transform[ctrlB.Length]};
 		array [0] = ctrlA;
 		array [1] = ctrlB;
-		//BS [0] = b;
-		//BS [1] = b2;
 		whatTrack = 0;
-//		Debug.Log (BS [whatTrack]);
 		u = 0f;
 		top_speed = 40f;
-		//        road_smooth = 0.1f;
 		velocity = 0;
-		lane = Vector3.zero;
 		drag *= weight;
-			
+        lane_change = 0f;
+        for (int i = 0; i < ctrlA.Length; i++)
+            ctrlA[i].GetComponent<Renderer>().enabled = false;
+        for (int i = 0; i < ctrlB.Length; i++)
+            ctrlB[i].GetComponent<Renderer>().enabled = false;
 	}
-
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		//Debug.Log ("FU(0): " + u + " V= " + velocity);
-		//changeLanes(); // after net_pos
-		//deltaVelocity();
-		velocity = 1;
-		//Debug.Log ("FU(1): " + u + " V= " + velocity);
+		velocity = 5;
 		u += Time.fixedDeltaTime * velocity / 5;
-		if (u >= BS[whatTrack].Length)
+        if (CrossPlatformInputManager.GetAxis("Horizontal") != 0)
+            u += changeLanes(u) - (float)Math.Truncate(u);
+        if (u >= BS[whatTrack].Length)
 			u -= BS[whatTrack].Length;
-//		Vector3 next_pos = BS[whatTrack].Evaluate(u);
-//		Vector3 next_pos = b.Evaluate (u);
-		original = transform.position;
-		Vector3 next_pos = changeLanes ();
-		//changeLanes (next_pos);
-		transform.LookAt(next_pos);
-		//Transform [] tempT = new Transform[] = {
-		//	original,
-		//	next_pos
-		//}
-		//BSpline temp = new BSpline (tempT);
-		//transform.position = next_pos + lane;
-		//transform.position = Vector3.Slerp (original, next_pos, 1f);
-	}
-	
-	void deltaVelocity() {
+        Vector3 next_pos = BS[whatTrack].Evaluate(u);
+        if (lane_change > 0) {
+            if (lane_change - 0.05f < 0f)
+                lane_change = 0;
+            else
+                lane_change -= 0.05f;
+            transform.position = transform.position + (next_pos - transform.position).normalized * velocity * Time.deltaTime;
+        } else {
+            transform.LookAt(next_pos);
+            transform.position = next_pos;
+        }
+    }
+
+    void deltaVelocity() {
 		//Debug.Log ("DV: " + drag + " " + first_gear + " " + second_gear + " " + third_gear + " " + fourth_gear + " " + top_speed);
 		if (CrossPlatformInputManager.GetAxis("Vertical") == 0 && velocity > 0)
 			velocity -= drag;
@@ -100,117 +75,28 @@ public class CC1 : MonoBehaviour {
 			velocity = 0;
 	}
 	
-	Vector3 changeLanes() {
-		//Debug.Log (CrossPlatformInputManager.GetAxis ("Horizontal"));
-		// in this the size is 2
+	public int changeLanes(float temp) {
 		Vector3 nextPosition = BS [whatTrack].Evaluate (u);
-		//foreach (Transform t in array[whatTrack])
-		//	Debug.Log (t.position);
-		//for (int i = 0; i < BS[whatTrack].ctlPoint.Length; i++)
-	//		Debug.Log (BS [whatTrack].ctlPoint [i].position);
-		//Debug.Log (nextPosition);
-		//float searchX;
-		//float searchZ;
-		//int lowestIndex = 0;
-
-		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack != trackMin) {
-			//Debug.Log("one"); // save original position
-			//Vector3 original = transform.position;
+		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack > trackMin) {
 			whatTrack -= 1;
-			//searchX = transform.position.x / 2f;
-			//searchZ = transform.position.z / 2f;
-			for (int i = 0; i < array[whatTrack].Length - 1; i++){ 
-				//Debug.Log ("bob");
-				//original = transform.position;
-				//Debug.Log ("Evaluating at: " + array[whatTrack][i].position + " Next Item" + array[whatTrack][i+1].position + "current" + original);
-				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
-//				if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.x - nextPosition.x))){ // may be wrong, should be < or equal to
-//					if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-				//int n = array[whatTrack].Length - 1;
-				//Debug.Log (i + " : " + n);
-				//if (i == array[whatTrack].Length - 1){
-				//	Debug.Log ("True");
-				//	nextPosition = array[whatTrack][0].position;
-				//}
-				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
-					//Debug.Log ("1st if: Evaluating at: " + array[whatTrack][i].position + " Next Item" + array[whatTrack][i+1].position + "current" + original);
-					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
-						//Debug.Log ("in loop" + array[whatTrack][i].position + "next point" + array[whatTrack][i+1].position);
-						nextPosition = array[whatTrack][i+1].position;
-						//Transform [] tempTrack = new Transform[] {
-						//	transform,
-						//	array[whatTrack][i+1]
-						//};
-						//BSpline temp = new BSpline (tempTrack);
-						//transform.LookAt(nextPosition);
-						//u += Time.fixedDeltaTime * velocity / 5;
-						//if (u >= BS[whatTrack].Length)
-						//	u -= BS[whatTrack].Length;
-						//transform.position = temp.Evaluate(u);
-						//transform.position = Vector3.MoveTowards(original, nextPosition, 2f * Time.deltaTime);
-						//transform.position = Vector3.Slerp (original, nextPosition, 10f);
-					 	return nextPosition;
-					}
-				}
-				//else if (i == array[whatTrack].Length - 1){
-				//	nextPosition = array[whatTrack][0].position;
-					//Debug.Log ("overflow: " + nextPosition);
-				//}
-			}
+//			for (int i = 0; i < array[whatTrack].Length - 1; i++){ 
+//				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
+//					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
+//                        return i;
+//                    }
+//				}
+//			}
 		} 
-		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMax) {
-			//Debug.Log ("two");
-			whatTrack +=1;
-			//searchX = transform.position.x / 2f;
-			//searchZ = transform.position.z /2f;
-			for (int i = 0; i < array[whatTrack].Length - 1; i++){
-				//original = transform.position;
-				//Debug.Log ("AntiBob");
-				//if ((Mathf.Abs(array[whatTrack][i+1].position - nextPosition)) > (Mathf.Abs (array[whatTrack][i].position - nextPosition))){
-				//	nextPosition = array[whatTrack][i].position;
-				//}
-				//if ((Mathf.Abs (array[whatTrack][i+1].position.x - nextPosition.x)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-				//	if ((Mathf.Abs(array[whatTrack][i+1].position.z - nextPosition.z)) > (Mathf.Abs(array[whatTrack][i].position.z - nextPosition.z))){
-				//int n = array[whatTrack].Length - 1;
-				//Debug.Log (i + " : " + n);
-				//if (i == array[whatTrack].Length - 1){
-			//		Debug.Log ("true2");
-			//		nextPosition = array[whatTrack][0].position;
-			//	}
-				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
-					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
-						//Debug.Log (array[whatTrack][i].position);
-						nextPosition = array[whatTrack][i+1].position;
-						transform.LookAt(nextPosition);
-						transform.position = nextPosition + lane;
-						//Transform [] tempTrack = new Transform[] {
-						//	transform,
-						//	array[whatTrack][i+1]
-						//};
-						//BSpline temp = new BSpline (tempTrack);
-						//transform.LookAt(nextPosition);
-						//u += Time.fixedDeltaTime * velocity / 5;
-						//if (u >= BS[whatTrack].Length)
-						//	u -= BS[whatTrack].Length;
-						//transform.position = temp.Evaluate(u);
-						//transform.position = Vector3.MoveTowards(original, nextPosition, 2f * Time.deltaTime);
-						//transform.position = Vector3.Slerp (original, nextPosition, 10f);
-						return nextPosition;
-					}
-				}
-				//else if (i == array[whatTrack].Length - 1){
-				//	nextPosition = array[whatTrack][0].position;
-				//}
-			}
+		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack < trackMax) {
+            whatTrack +=1;
+//			for (int i = 0; i < array[whatTrack].Length - 1; i++){
+//				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
+//					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
+//                        return i;
+//                    }
+//				}
+//			}
 		}
-		//if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0)
-		//	Debug.Log ("greater than");
-		//else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack != trackMax)
-		//	Debug.Log ("less than");
-
-		//Debug.Log (nextPosition);
-		transform.LookAt (nextPosition);
-		transform.position = nextPosition + lane;
-		return nextPosition;
+        return (int) Math.Truncate(temp);
 	}
 }
