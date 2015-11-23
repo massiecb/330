@@ -11,6 +11,7 @@ public class Track : MonoBehaviour {
     public Transform[] ctrl;
     private BSpline b;
 	// Use this for initialization
+	//tests
 	void Start () {
         b = new BSpline(ctrl);
         u = 0f;
