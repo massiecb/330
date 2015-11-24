@@ -5,59 +5,62 @@ using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class CC1 : MonoBehaviour {
-	//force commit
-	public float u, velocity, first_gear, second_gear, third_gear, fourth_gear, top_speed, drag, weight, lane_change;
-	public Transform[] ctrlA, ctrlB;
-	public BSpline[] BS;
-	public Transform[][] array; 
-	private BSpline b, b2;
-	private int whatTrack;
-	private int trackMin = 0, trackMax = 1;
-	private Vector3 original, prev_track;
+    //force commit
+    private GameObject ghost;
+	public float u, velocity, first_gear, second_gear, third_gear, fourth_gear, top_speed, drag, weight, lane_change, shift;
+//	public BSpline[] BS;
+//	public Transform[][] array; 
+	private BSpline b2;
+	public int whatTrack;
+	private int trackMin = -1, trackMax = 1, lane_change_pause = 0;
+//	private Vector3 original, prev_track;
 
 	// Use this for initialization
 	void Start () {
-//		Debug.Log (b);
-		b = new BSpline(ctrlA);
-		b2 = new BSpline (ctrlB);
-		BS = new BSpline[] {b, b2};
-		array = new Transform[][] {new Transform[ctrlA.Length], new Transform[ctrlB.Length]};
-		array [0] = ctrlA;
-		array [1] = ctrlB;
-		whatTrack = 0;
-		u = 0f;
-		top_speed = 40f;
-		velocity = 0;
-		drag *= weight;
+        GameObject track = GameObject.FindGameObjectWithTag("TrackB");
+        b2 = new BSpline (track.GetComponentsInChildren<Transform>());
+        whatTrack = 0;
+		u = 1f;
+        ghost = new GameObject();
+		top_speed = 80f;
+		velocity = 0f;
+        shift = 4.0f;
+        drag = 2; weight = 10; drag *= weight;
         lane_change = 0f;
-        for (int i = 0; i < ctrlA.Length; i++)
-            ctrlA[i].GetComponent<Renderer>().enabled = false;
-        for (int i = 0; i < ctrlB.Length; i++)
-            ctrlB[i].GetComponent<Renderer>().enabled = false;
+        first_gear = 20; second_gear = 18; third_gear = 16; fourth_gear = 12;
+        for (int i = 0; i < track.transform.childCount; i++)
+            track.transform.GetChild(i).GetComponent<Renderer>().enabled = false;
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		velocity = 5;
-		u += Time.fixedDeltaTime * velocity / 5;
-        if (CrossPlatformInputManager.GetAxis("Horizontal") != 0)
-            u += changeLanes(u) - (float)Math.Truncate(u);
-        if (u >= BS[whatTrack].Length)
-			u -= BS[whatTrack].Length;
-        Vector3 next_pos = BS[whatTrack].Evaluate(u);
-        if (lane_change > 0) {
-            if (lane_change - 0.05f < 0f)
-                lane_change = 0;
+        velocity = deltaVelocity(velocity);
+        if (lane_change_pause < 15)
+            lane_change_pause++;
+        float point_smooth = 1 / (b2.Evaluate((float)Math.Truncate(u + 1)) - b2.Evaluate((float)Math.Truncate(u))).magnitude;
+		u += Time.fixedDeltaTime * velocity / 5 * point_smooth;
+        if (CrossPlatformInputManager.GetAxis("Horizontal") != 0 && lane_change_pause == 15)
+            changeLanes();
+        if (u >= b2.Length)
+            u -= b2.Length;
+        Vector3 next_pos = b2.Evaluate(u);
+        ghost.transform.LookAt(next_pos);
+        ghost.transform.position = next_pos;
+        if (whatTrack == -1)
+            next_pos = ghost.transform.position - ghost.transform.right * shift;
+        else if (whatTrack == 1)
+            next_pos = ghost.transform.position + ghost.transform.right * shift;
+        if (lane_change != 1) {
+            if (lane_change + 0.01 > 1f)
+                lane_change = 1;
             else
-                lane_change -= 0.05f;
-            transform.position = transform.position + (next_pos - transform.position).normalized * velocity * Time.deltaTime;
-        } else {
-            transform.LookAt(next_pos);
-            transform.position = next_pos;
+                lane_change += 0.01f;
         }
+        transform.localRotation = ghost.transform.localRotation;
+        transform.position = transform.position * (1 - lane_change) + next_pos * lane_change;
     }
 
-    void deltaVelocity() {
+    private float deltaVelocity(float velocity) {
 		//Debug.Log ("DV: " + drag + " " + first_gear + " " + second_gear + " " + third_gear + " " + fourth_gear + " " + top_speed);
 		if (CrossPlatformInputManager.GetAxis("Vertical") == 0 && velocity > 0)
 			velocity -= drag;
@@ -73,30 +76,15 @@ public class CC1 : MonoBehaviour {
 			velocity = top_speed;
 		if (velocity < 0)
 			velocity = 0;
+        return velocity;
 	}
 	
-	public int changeLanes(float temp) {
-		Vector3 nextPosition = BS [whatTrack].Evaluate (u);
-		if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack > trackMin) {
+	public void changeLanes() {
+        lane_change = 0;
+        lane_change_pause = 0;
+        if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack > trackMin)
 			whatTrack -= 1;
-//			for (int i = 0; i < array[whatTrack].Length - 1; i++){ 
-//				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
-//					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
-//                        return i;
-//                    }
-//				}
-//			}
-		} 
-		else if (CrossPlatformInputManager.GetAxis ("Horizontal") < 0 && whatTrack < trackMax) {
+		else if (CrossPlatformInputManager.GetAxis ("Horizontal") > 0 && whatTrack < trackMax)
             whatTrack +=1;
-//			for (int i = 0; i < array[whatTrack].Length - 1; i++){
-//				if (Mathf.Abs (original.x - array[whatTrack][i].position.x) < Mathf.Abs (original.x  - array[whatTrack][i+1].position.x)){
-//					if (Mathf.Abs (original.z - array[whatTrack][i].position.z) < Mathf.Abs(original.z - array[whatTrack][i+1].position.z)){
-//                        return i;
-//                    }
-//				}
-//			}
-		}
-        return (int) Math.Truncate(temp);
 	}
 }
