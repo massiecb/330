@@ -22,12 +22,12 @@ public class CC1 : MonoBehaviour {
         whatTrack = 0;
 		u = 1f;
         ghost = new GameObject();
-		top_speed = 80f;
+		top_speed = 120f;
 		velocity = 0f;
         shift = 4.0f;
         drag = 2; weight = 10; drag *= weight;
         lane_change = 0f;
-        first_gear = 20; second_gear = 18; third_gear = 16; fourth_gear = 12;
+        first_gear = 10; second_gear = 8; third_gear = 6; fourth_gear = 4;
         for (int i = 0; i < track.transform.childCount; i++)
             track.transform.GetChild(i).GetComponent<Renderer>().enabled = false;
 	}
@@ -37,7 +37,12 @@ public class CC1 : MonoBehaviour {
         velocity = deltaVelocity(velocity);
         if (lane_change_pause < 15)
             lane_change_pause++;
-        float point_smooth = 1 / (b2.Evaluate((float)Math.Truncate(u + 1)) - b2.Evaluate((float)Math.Truncate(u))).magnitude;
+		float next_position;
+		if (u + 1 > b2.Length)
+			next_position = u + 1f - b2.Length;
+		else
+			next_position = (float)Math.Truncate (u) + 1f;
+        float point_smooth = 1 / (b2.Evaluate(next_position) - b2.Evaluate((float)Math.Truncate(u))).magnitude;
 		u += Time.fixedDeltaTime * velocity / 5 * point_smooth;
         if (CrossPlatformInputManager.GetAxis("Horizontal") != 0 && lane_change_pause == 15)
             changeLanes();
