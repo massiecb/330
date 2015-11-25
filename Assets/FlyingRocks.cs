@@ -13,7 +13,6 @@ public class FlyingRocks : MonoBehaviour {
 	private int rockNumber = 0;
 	void Start () {
 		OriginRock = GameObject.FindWithTag ("OriginRock");
-		//GameObject trackA1 = GameObject.FindWithTag ("TrackA");
 		trackA = GameObject.FindWithTag ("TrackA").GetComponentsInChildren<Transform> ();
 		trackC = GameObject.FindWithTag ("TrackC").GetComponentsInChildren<Transform> ();
 		rocks = new Transform[20];
@@ -36,8 +35,10 @@ public class FlyingRocks : MonoBehaviour {
 		if (rockNumber < rocks.Length) {
 			rock = Instantiate (OriginRock);
 			rock.GetComponent<Renderer>().enabled = true;
+			rock.GetComponent<SphereCollider>().enabled = true;
 			rockThrow = ThrowRock (OriginRock.transform, rocks [rockNumber]);
-			rock.GetComponent<Rigidbody>().AddForce (rockThrow, ForceMode.VelocityChange);
+			//rock.GetComponent<Rigidbody>().AddForce (rockThrow, ForceMode.VelocityChange);
+			rock.transform.position = rocks[rockNumber].position;
 			rockNumber += 1;
 			//rock.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 		}
