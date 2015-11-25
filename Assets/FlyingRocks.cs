@@ -37,10 +37,12 @@ public class FlyingRocks : MonoBehaviour {
 			rock.GetComponent<Renderer>().enabled = true;
 			rock.GetComponent<SphereCollider>().enabled = true;
 			rockThrow = ThrowRock (OriginRock.transform, rocks [rockNumber]);
+			rock.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 			//rock.GetComponent<Rigidbody>().AddForce (rockThrow, ForceMode.VelocityChange);
 			rock.transform.position = rocks[rockNumber].position;
+			if (rock.transform.position == rocks[rockNumber].position)
+				rock.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 			rockNumber += 1;
-			//rock.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 		}
 
 	}
