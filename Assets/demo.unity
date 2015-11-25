@@ -8429,15 +8429,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400002, guid: a74c4f07e37f8f04fa15f35de76ebaff, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 406.764282
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a74c4f07e37f8f04fa15f35de76ebaff, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 36.0099983
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a74c4f07e37f8f04fa15f35de76ebaff, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 215.990005
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a74c4f07e37f8f04fa15f35de76ebaff, type: 3}
       propertyPath: m_LocalRotation.x
@@ -8461,7 +8461,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 9500000, guid: a74c4f07e37f8f04fa15f35de76ebaff, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a74c4f07e37f8f04fa15f35de76ebaff, type: 3}
@@ -13138,6 +13138,25 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 489340483}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &493369210 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 160352, guid: 4db2ab7345ad74b24b698e20b4a5212c, type: 2}
+  m_PrefabInternal: {fileID: 2098899592}
+--- !u!54 &493369215
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 493369210}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: .0500000007
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &494988629
 GameObject:
   m_ObjectHideFlags: 0
@@ -15763,6 +15782,7 @@ GameObject:
   - 4: {fileID: 606084687}
   - 218: {fileID: 606084686}
   - 154: {fileID: 606084685}
+  - 114: {fileID: 606084688}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -15823,6 +15843,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+--- !u!114 &606084688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 606084684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6313b8c9124cf47e99a50820e7f2d616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rock: {fileID: 0}
+  OriginRock: {fileID: 0}
+  rockThrow: {x: 0, y: 0, z: 0}
+  trackA: []
+  trackC: []
+  rocks: []
 --- !u!1 &608639150
 GameObject:
   m_ObjectHideFlags: 0
@@ -24666,7 +24703,7 @@ GameObject:
   - 4: {fileID: 997065785}
   m_Layer: 0
   m_Name: trackA
-  m_TagString: Untagged
+  m_TagString: TrackA
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33823,7 +33860,7 @@ GameObject:
   - 4: {fileID: 1293620311}
   m_Layer: 0
   m_Name: trackB
-  m_TagString: Untagged
+  m_TagString: TrackB
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43237,7 +43274,7 @@ GameObject:
   - 4: {fileID: 1652715366}
   m_Layer: 0
   m_Name: trackC
-  m_TagString: Untagged
+  m_TagString: TrackC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -55390,7 +55427,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 401694, guid: 4db2ab7345ad74b24b698e20b4a5212c, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 77
+      value: 86.7799988
       objectReference: {fileID: 0}
     - target: {fileID: 401694, guid: 4db2ab7345ad74b24b698e20b4a5212c, type: 2}
       propertyPath: m_LocalPosition.z
@@ -55422,15 +55459,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 13506200, guid: 4db2ab7345ad74b24b698e20b4a5212c, type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2307196, guid: 4db2ab7345ad74b24b698e20b4a5212c, type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 160352, guid: 4db2ab7345ad74b24b698e20b4a5212c, type: 2}
       propertyPath: m_TagString
-      value: TrackB
+      value: OriginRock
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4db2ab7345ad74b24b698e20b4a5212c, type: 2}
