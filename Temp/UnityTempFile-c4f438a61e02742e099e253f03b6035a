@@ -79,6 +79,8 @@
 'Assets/BSpline.cs'
 'Assets/CC1.cs'
 'Assets/FlyingRocks.cs'
+'Assets/NewBehaviourScript.cs'
 'Assets/Track.cs'
+'Assets/positionTest.cs'
 -r:'/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/unity/System.Runtime.Serialization.dll'
 -r:'/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/unity/System.Xml.Linq.dll'
