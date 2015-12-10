@@ -45,12 +45,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\BSpline.cs" />
-     <Compile Include="Assets\CC1.cs" />
-     <Compile Include="Assets\FlyingRocks.cs" />
-     <Compile Include="Assets\NewBehaviourScript.cs" />
-     <Compile Include="Assets\Track.cs" />
-     <Compile Include="Assets\positionTest.cs" />
+     <Compile Include="Assets\Scripts\AI.cs" />
+     <Compile Include="Assets\Scripts\BSpline.cs" />
+     <Compile Include="Assets\Scripts\CC1.cs" />
+     <Compile Include="Assets\Scripts\FlyingRocks.cs" />
+     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
+     <Compile Include="Assets\Scripts\StopRock.cs" />
+     <Compile Include="Assets\Scripts\Track.cs" />
+     <Compile Include="Assets\Scripts\positionTest.cs" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
