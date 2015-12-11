@@ -49,7 +49,12 @@
      <Compile Include="Assets\Scripts\BSpline.cs" />
      <Compile Include="Assets\Scripts\CC1.cs" />
      <Compile Include="Assets\Scripts\FlyingRocks.cs" />
+     <Compile Include="Assets\Scripts\GreenShell.cs" />
      <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
+     <Compile Include="Assets\Scripts\PowerUp.cs" />
+     <Compile Include="Assets\Scripts\RedShell.cs" />
+     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
+     <Compile Include="Assets\Scripts\SpawnPointAI.cs" />
      <Compile Include="Assets\Scripts\StopRock.cs" />
      <Compile Include="Assets\Scripts\Track.cs" />
      <Compile Include="Assets\Scripts\positionTest.cs" />

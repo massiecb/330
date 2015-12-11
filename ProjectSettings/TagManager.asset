@@ -8,6 +8,11 @@ TagManager:
   - TrackC
   - TrackA
   - OriginRock
+  - Terrain
+  - Pick Up
+  - Car
+  - oil
+  - missile
   layers:
   - Default
   - TransparentFX
